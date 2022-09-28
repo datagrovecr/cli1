@@ -1,1 +1,1 @@
-This is a text with some *emphasis*
+This is a **text** with some *emphasis*

@@ -7,6 +7,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Validation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using HtmlToOpenXml;
+using System.Text;
 
 internal class Program
 {
@@ -64,8 +65,73 @@ internal class Program
         var totaltext = body.InnerText;
         String text = totaltext;
 
-        File.WriteAllText(outfile, text);
+        File.WriteAllText(outfile + ".all.txt", text);
+
+        StringBuilder textBuilder = new StringBuilder();
+        var parts = wordDoc.MainDocumentPart.Document.Descendants().FirstOrDefault();
+        StyleDefinitionsPart styleDefinitionsPart = wordDoc.MainDocumentPart.StyleDefinitionsPart;
+        if (parts != null)
+        {
+            foreach (var node in parts.ChildElements)
+            {
+                if (node is Paragraph)
+                {
+                    ProcessParagraph((Paragraph)node, textBuilder);
+                    textBuilder.AppendLine("");
+                }
+
+                if (node is Table)
+                {
+                    ProcessTable((Table)node, textBuilder);
+                }
+            }
+        }
+        File.WriteAllText(outfile, textBuilder.ToString());
     }
+
+    private static void ProcessTable(Table node, StringBuilder textBuilder)
+    {
+        foreach (var row in node.Descendants<TableRow>())
+        {
+            textBuilder.Append("| ");
+            foreach (var cell in row.Descendants<TableCell>())
+            {
+                foreach (var para in cell.Descendants<Paragraph>())
+                {
+                    ProcessParagraph(para, textBuilder);
+                }
+                textBuilder.Append(" | ");
+            }
+            textBuilder.AppendLine("");
+        }
+    }
+
+    private static void ProcessParagraph(Paragraph node, StringBuilder textBuilder)
+    {
+
+        foreach (var run in node.Descendants<Run>())
+        {
+            String prefix = "";
+            if (run.RunProperties != null)
+            {
+                if (run.RunProperties.Bold != null)
+                {
+                    prefix += "*";
+                }
+                if (run.RunProperties.Italic != null)
+                {
+                    prefix += "_";
+                }
+            }
+            textBuilder.Append(prefix + run.InnerText + prefix + " ");
+            prefix = "";
+            //text.GetAttributes();
+
+        }
+        textBuilder.Append("\n\n");
+    }
+
+
 
     static void AssertThatOpenXmlDocumentIsValid(WordprocessingDocument wpDoc)
     {
