@@ -12,7 +12,8 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        var html = Markdown.ToHtml("This is a text with some *emphasis*");
+        String md = File.ReadAllText("test.md");
+        var html = Markdown.ToHtml(md);
 
         const string filename = "test.docx";
 
@@ -50,10 +51,22 @@ internal class Program
             }
 
             File.WriteAllBytes(filename, generatedDocument.ToArray());
+            md2docx(filename, filename + ".md");
         }
 
 
     }
+    static void md2docx(String filename, String outfile)
+    {
+        WordprocessingDocument wordDoc = WordprocessingDocument.Open(filename, false);
+        DocumentFormat.OpenXml.Wordprocessing.Body body
+        = wordDoc.MainDocumentPart.Document.Body;
+        var totaltext = body.InnerText;
+        String text = totaltext;
+
+        File.WriteAllText(outfile, text);
+    }
+
     static void AssertThatOpenXmlDocumentIsValid(WordprocessingDocument wpDoc)
     {
 
