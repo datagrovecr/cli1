@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/jimhurd/dev/experiments/cli1/cli1.csproj": {}
+    "/Users/fabianvalverde/Documents/GitHub/cli1/cli1.csproj": {}
   },
   "projects": {
-    "/Users/jimhurd/dev/experiments/cli1/cli1.csproj": {
+    "/Users/fabianvalverde/Documents/GitHub/cli1/cli1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jimhurd/dev/experiments/cli1/cli1.csproj",
+        "projectUniqueName": "/Users/fabianvalverde/Documents/GitHub/cli1/cli1.csproj",
         "projectName": "cli1",
-        "projectPath": "/Users/jimhurd/dev/experiments/cli1/cli1.csproj",
-        "packagesPath": "/Users/jimhurd/.nuget/packages/",
-        "outputPath": "/Users/jimhurd/dev/experiments/cli1/obj/",
+        "projectPath": "/Users/fabianvalverde/Documents/GitHub/cli1/cli1.csproj",
+        "packagesPath": "/Users/fabianvalverde/.nuget/packages/",
+        "outputPath": "/Users/fabianvalverde/Documents/GitHub/cli1/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/jimhurd/.nuget/NuGet/NuGet.Config"
+          "/Users/fabianvalverde/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
