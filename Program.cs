@@ -13,33 +13,45 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        string md = File.ReadAllText("/Users/fabianvalverde/Documents/GitHub/cli1/test.md");
-        const string filename = "/Users/fabianvalverde/Documents/GitHub/cli1/test.md";
-        string html = Markdown.ToHtml(md);
+        String md = File.ReadAllText("/Users/fabianvalverde/Documents/GitHub/cli1/test.md");
+        String html = Markdown.ToHtml(md);
+
+        const string filename = "/Users/fabianvalverde/Documents/GitHub/cli1/test.docx";
 
         if (File.Exists(filename)) File.Delete(filename);
 
         using (MemoryStream generatedDocument = new MemoryStream())
         {
-            using (WordprocessingDocument package = WordprocessingDocument.Create(generatedDocument, WordprocessingDocumentType.Document))
+            // Uncomment and comment the second using() to open an existing template document
+            // instead of creating it from scratch.
+
+
+            //using (var buffer = new FileStream("/Users/fabianvalverde/Documents/GitHub/cli1/template.docx", FileMode.Open, FileAccess.Read))
+            //{
+              //  buffer.CopyTo(generatedDocument);
+            //}
+
+            //using (WordprocessingDocument wordDocument = WordprocessingDocument.Open("/Users/fabianvalverde/Documents/GitHub/cli1/template.docx", true))
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(generatedDocument, WordprocessingDocumentType.Document))
             {
-                MainDocumentPart mainPart = package.MainDocumentPart;
+                MainDocumentPart mainPart = wordDocument.MainDocumentPart;
                 if (mainPart == null)
                 {
-                    mainPart = package.AddMainDocumentPart();
-                    new Document(new Body()).Save(mainPart);
+                    mainPart = wordDocument.AddMainDocumentPart();
+                    mainPart.Document = new Document();
                 }
 
                 HtmlConverter converter = new HtmlConverter(mainPart);
-                converter.Parse(html);
 
+                converter.ParseHtml(html);
                 mainPart.Document.Save();
+
+                AssertThatOpenXmlDocumentIsValid(wordDocument);
             }
 
             File.WriteAllBytes(filename, generatedDocument.ToArray());
+            md2docx(filename, filename + ".md");
         }
-
-        System.Diagnostics.Process.Start(filename);
     }
 
 
