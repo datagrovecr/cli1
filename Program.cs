@@ -13,6 +13,7 @@ internal class Program
 {
     static void Main(string[] args)
     {
+<<<<<<< HEAD
         string md = File.ReadAllText("/Users/fabianvalverde/Documents/GitHub/cli1/test.md");
         const string filename = "/Users/fabianvalverde/Documents/GitHub/cli1/test.md";
         string html = Markdown.ToHtml(md);
@@ -119,6 +120,50 @@ internal class Program
 
 
 
+=======
+        var html = Markdown.ToHtml("This is a text with some *emphasis*");
+
+        const string filename = "test.docx";
+
+        if (File.Exists(filename)) File.Delete(filename);
+
+        using (MemoryStream generatedDocument = new MemoryStream())
+        {
+            // Uncomment and comment the second using() to open an existing template document
+            // instead of creating it from scratch.
+
+
+            using (var buffer = new FileStream("template.docx", FileMode.Open, FileAccess.Read))
+            {
+                buffer.CopyTo(generatedDocument);
+            }
+
+            generatedDocument.Position = 0L;
+            using (WordprocessingDocument package = WordprocessingDocument.Open(generatedDocument, true))
+            //using (WordprocessingDocument package = WordprocessingDocument.Create(generatedDocument, WordprocessingDocumentType.Document))
+            {
+                MainDocumentPart mainPart = package.MainDocumentPart;
+                if (mainPart == null)
+                {
+                    mainPart = package.AddMainDocumentPart();
+                    new Document(new Body()).Save(mainPart);
+                }
+
+                HtmlConverter converter = new HtmlConverter(mainPart);
+                Body body = mainPart.Document.Body;
+
+                converter.ParseHtml(html);
+                mainPart.Document.Save();
+
+                AssertThatOpenXmlDocumentIsValid(package);
+            }
+
+            File.WriteAllBytes(filename, generatedDocument.ToArray());
+        }
+
+
+    }
+>>>>>>> parent of d41bc26 (md2docx)
     static void AssertThatOpenXmlDocumentIsValid(WordprocessingDocument wpDoc)
     {
 
